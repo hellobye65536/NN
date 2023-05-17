@@ -1,0 +1,4 @@
+## Backpropogation
+
+Consider a network
+\\[ \\]
