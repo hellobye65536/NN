@@ -1,5 +1,8 @@
 package hb.tensor;
 
+import java.util.function.DoubleFunction;
+import java.util.function.DoubleUnaryOperator;
+
 public final class Matrix {
     private final float[] buffer;
     private final int rows, cols;
@@ -55,6 +58,12 @@ public final class Matrix {
             throw new IndexOutOfBoundsException();
 
         buffer[row * cols + col] = v;
+    }
+
+    public void mutate(DoubleUnaryOperator func) {
+        for (int i = 0; i < buffer.length; i++) {
+            buffer[i] = (float) func.applyAsDouble(buffer[i]);
+        }
     }
 
     public Matrix matmulNN(Matrix lhs) {
