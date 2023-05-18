@@ -79,6 +79,42 @@ public final class Matrix {
         return result;
     }
 
+    public Matrix matmulTN(Matrix lhs) {
+        if (this.rows != lhs.rows)
+            throw new IllegalArgumentException();
+
+        Matrix result = Matrix.zeros(this.cols, lhs.cols);
+        for (int row = 0; row < this.cols; row++) {
+            for (int col = 0; col < lhs.cols; col++) {
+                float element = 0;
+                for (int i = 0; i < this.rows; i++) {
+                    element += this.get(i, row) * lhs.get(i, col);
+                }
+                result.set(row, col, element);
+            }
+        }
+
+        return result;
+    }
+
+    public Matrix matmulNT(Matrix lhs) {
+        if (this.cols != lhs.cols)
+            throw new IllegalArgumentException();
+
+        Matrix result = Matrix.zeros(this.rows, lhs.rows);
+        for (int row = 0; row < this.rows; row++) {
+            for (int col = 0; col < lhs.rows; col++) {
+                float element = 0;
+                for (int i = 0; i < this.cols; i++) {
+                    element += this.get(row, i) * lhs.get(col, i);
+                }
+                result.set(row, col, element);
+            }
+        }
+
+        return result;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
