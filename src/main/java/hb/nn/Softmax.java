@@ -6,7 +6,7 @@ public class Softmax implements Layer {
     public final float beta;
 
     public Softmax() {
-        this.beta = 0;
+        this.beta = 1;
     }
 
     public Softmax(float beta) {
@@ -20,6 +20,7 @@ public class Softmax implements Layer {
 
     @Override
     public Matrix forward(Matrix input) {
+        input = input.clone();
         for (int col = 0; col < input.cols(); col++) {
             float col_max = 0;
             for (int row = 0; row < input.rows(); row++) {
@@ -48,15 +49,17 @@ public class Softmax implements Layer {
     @Override
     public Matrix inputGradient(Matrix input, Matrix output, Matrix outputGradient) {
         for (int col = 0; col < input.cols(); col++) {
-            float col_sum = -1;
+            float col_sum = 0;
             for (int row = 0; row < input.rows(); row++) {
-                col_sum += output.get(row, col);
+                final float v_o = output.get(row, col);
+                final float v_og = outputGradient.get(row, col);
+                col_sum += v_o * v_og;
             }
 
             for (int row = 0; row < input.rows(); row++) {
                 final float v_o = output.get(row, col);
                 final float v_og = outputGradient.get(row, col);
-                outputGradient.set(row, col, -v_og * v_o * col_sum);
+                outputGradient.set(row, col, -beta * v_o * (col_sum - v_og));
             }
         }
 

@@ -1,5 +1,6 @@
 package hb.tensor;
 
+import java.util.Arrays;
 import java.util.function.DoubleFunction;
 import java.util.function.DoubleUnaryOperator;
 
@@ -79,7 +80,27 @@ public final class Matrix {
     }
 
     @Override
-    protected Matrix clone() throws CloneNotSupportedException {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Matrix matrix = (Matrix) o;
+
+        if (rows != matrix.rows) return false;
+        if (cols != matrix.cols) return false;
+        return Arrays.equals(buffer, matrix.buffer);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Arrays.hashCode(buffer);
+        result = 31 * result + rows;
+        result = 31 * result + cols;
+        return result;
+    }
+
+    @Override
+    public Matrix clone() {
         return new Matrix(buffer.clone(), rows, cols);
     }
 
