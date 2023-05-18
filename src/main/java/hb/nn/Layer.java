@@ -1,4 +1,4 @@
-package hb.tensor.nn;
+package hb.nn;
 
 import hb.tensor.Matrix;
 
@@ -27,18 +27,20 @@ public interface Layer {
      * given the gradient with respect to the output of this layer.
      *
      * @param input          the input matrix to the layer.
+     * @param output         the output matrix from the layer.
      * @param outputGradient the gradient of the loss function with respect to the output of the layer.
      * @return the input gradient of the layer.
      */
-    Matrix inputGradient(Matrix input, Matrix outputGradient);
+    Matrix inputGradient(Matrix input, Matrix output, Matrix outputGradient);
 
     /**
      * Calculates the gradient of the loss function with respect to the weights of this layer,
      * given the gradient with respect to the output of this layer.
      *
      * @param input          the input matrix to the layer.
+     * @param output         the output matrix from the layer.
      * @param outputGradient the gradient of the loss function with respect to the weights of the layer.
      * @return the weight gradient of the layer.
      */
-    Matrix weightGradient(Matrix input, Matrix outputGradient);
+    Matrix weightGradient(Matrix input, Matrix output, Matrix outputGradient);
 }

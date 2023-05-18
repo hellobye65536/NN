@@ -60,12 +60,6 @@ public final class Matrix {
         buffer[row * cols + col] = v;
     }
 
-    public void mutate(DoubleUnaryOperator func) {
-        for (int i = 0; i < buffer.length; i++) {
-            buffer[i] = (float) func.applyAsDouble(buffer[i]);
-        }
-    }
-
     public Matrix matmulNN(Matrix lhs) {
         if (this.cols != lhs.rows)
             throw new IllegalArgumentException();
@@ -87,5 +81,24 @@ public final class Matrix {
     @Override
     protected Matrix clone() throws CloneNotSupportedException {
         return new Matrix(buffer.clone(), rows, cols);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+
+        for (int row = 0; row < rows; row++) {
+            sb.append("\t[");
+            for (int col = 0; col < cols; col++) {
+                sb.append(get(row, col));
+                sb.append(", ");
+            }
+            sb.append("],\n");
+        }
+
+        sb.append("]");
+
+        return sb.toString();
     }
 }
