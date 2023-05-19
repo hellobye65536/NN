@@ -1,8 +1,6 @@
 package hb.tensor;
 
 import java.util.Arrays;
-import java.util.function.DoubleFunction;
-import java.util.function.DoubleUnaryOperator;
 
 public final class Matrix {
     private final float[] buffer;
@@ -61,16 +59,16 @@ public final class Matrix {
         buffer[row * cols + col] = v;
     }
 
-    public Matrix matmulNN(Matrix lhs) {
-        if (this.cols != lhs.rows)
+    public Matrix matmulNN(Matrix rhs) {
+        if (this.cols != rhs.rows)
             throw new IllegalArgumentException();
 
-        Matrix result = Matrix.zeros(this.rows, lhs.cols);
+        Matrix result = Matrix.zeros(this.rows, rhs.cols);
         for (int row = 0; row < this.rows; row++) {
-            for (int col = 0; col < lhs.cols; col++) {
+            for (int col = 0; col < rhs.cols; col++) {
                 float element = 0;
                 for (int i = 0; i < this.cols; i++) {
-                    element += this.get(row, i) * lhs.get(i, col);
+                    element += this.get(row, i) * rhs.get(i, col);
                 }
                 result.set(row, col, element);
             }
@@ -79,16 +77,16 @@ public final class Matrix {
         return result;
     }
 
-    public Matrix matmulTN(Matrix lhs) {
-        if (this.rows != lhs.rows)
+    public Matrix matmulTN(Matrix rhs) {
+        if (this.rows != rhs.rows)
             throw new IllegalArgumentException();
 
-        Matrix result = Matrix.zeros(this.cols, lhs.cols);
+        Matrix result = Matrix.zeros(this.cols, rhs.cols);
         for (int row = 0; row < this.cols; row++) {
-            for (int col = 0; col < lhs.cols; col++) {
+            for (int col = 0; col < rhs.cols; col++) {
                 float element = 0;
                 for (int i = 0; i < this.rows; i++) {
-                    element += this.get(i, row) * lhs.get(i, col);
+                    element += this.get(i, row) * rhs.get(i, col);
                 }
                 result.set(row, col, element);
             }
@@ -97,16 +95,16 @@ public final class Matrix {
         return result;
     }
 
-    public Matrix matmulNT(Matrix lhs) {
-        if (this.cols != lhs.cols)
+    public Matrix matmulNT(Matrix rhs) {
+        if (this.cols != rhs.cols)
             throw new IllegalArgumentException();
 
-        Matrix result = Matrix.zeros(this.rows, lhs.rows);
+        Matrix result = Matrix.zeros(this.rows, rhs.rows);
         for (int row = 0; row < this.rows; row++) {
-            for (int col = 0; col < lhs.rows; col++) {
+            for (int col = 0; col < rhs.rows; col++) {
                 float element = 0;
                 for (int i = 0; i < this.cols; i++) {
-                    element += this.get(row, i) * lhs.get(col, i);
+                    element += this.get(row, i) * rhs.get(col, i);
                 }
                 result.set(row, col, element);
             }

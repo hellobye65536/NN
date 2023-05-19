@@ -14,8 +14,8 @@ dependencies {
 //    implementation("org.nd4j:nd4j-native-platform:1.0.0-M1")
 }
 
-tasks {
-    test {
-        useJUnitPlatform();
-    }
-}
+//tasks {
+//    test {
+//        useJUnitPlatform();
+//    }
+//}

@@ -1,16 +1,40 @@
 package hb;
 
-import hb.nn.Softmax;
+import hb.nn.*;
 import hb.tensor.Matrix;
 
-public class Main {
-    public static void main(String[] args) {
-        final Matrix input = new Matrix(new float[] {1, 1, 1}, 3, 1);
-        final Softmax softmax = new Softmax();
-        final Matrix output = softmax.forward(input);
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.zip.GZIPInputStream;
 
-        System.out.println(input);
-        System.out.println(output);
-        System.out.println(softmax.inputGradient(input, output, new Matrix(new float[] {1, 1, 2}, 3, 1)));
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        new GZIPInputStream(
+                                new FileInputStream("misc/train.csv.gz")
+                        )
+                )
+        );
+
+        String[] split = reader.readLine().split(",");
+        System.out.println(Arrays.toString(split));
+
+        Layer[] network = new Layer[]{
+                new Dense(28 * 28, 32),
+                new ReLU(),
+                new Dense(32, 32),
+                new ReLU(),
+                new Dense(32, 32),
+                new ReLU(),
+                new Dense(32, 32),
+                new ReLU(),
+                new Dense(32, 10),
+                new Softmax(),
+        };
+        Loss loss = new CrossEntropy();
     }
 }
