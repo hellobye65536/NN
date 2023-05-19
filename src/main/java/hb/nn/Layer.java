@@ -3,19 +3,20 @@ package hb.nn;
 import hb.tensor.Matrix;
 
 /**
- * The Layer interface represents a single layer in a neural network.
+ * Represents a single layer in a neural network.
  * <p>
- * It defines the common methods required for forward propagation and backpropagation.
+ * It defines the methods required for forward propagation and backpropagation.
  */
 public interface Layer {
 
     /**
-     * @return the weights matrix of the layer.
+     * @return the weights of the layer.
      */
     Matrix weights();
 
     /**
      * Performs forward propagation on the input matrix and returns the output matrix.
+     * (Evaluates this layer with some input)
      *
      * @param input the input matrix to the layer.
      * @return the output matrix produced by the layer.
