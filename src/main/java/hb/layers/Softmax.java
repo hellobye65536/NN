@@ -1,4 +1,4 @@
-package hb.nn;
+package hb.layers;
 
 import hb.tensor.Matrix;
 
@@ -19,8 +19,7 @@ public class Softmax implements Layer {
     }
 
     @Override
-    public Matrix forward(Matrix input) {
-        input = input.clone();
+    public Matrix forwardMut(Matrix input) {
         for (int col = 0; col < input.cols(); col++) {
             float col_max = 0;
             for (int row = 0; row < input.rows(); row++) {

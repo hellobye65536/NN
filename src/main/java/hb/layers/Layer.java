@@ -1,4 +1,4 @@
-package hb.nn;
+package hb.layers;
 
 import hb.tensor.Matrix;
 
@@ -21,11 +21,26 @@ public interface Layer {
      * @param input the input matrix to the layer.
      * @return the output matrix produced by the layer.
      */
-    Matrix forward(Matrix input);
+    default Matrix forward(Matrix input) {
+        return forwardMut(input.clone());
+    }
+
+    /**
+     * Performs forward propagation on the input matrix and returns the output matrix.
+     * (Evaluates this layer with some input)
+     *
+     * May mutate the input matrix.
+     *
+     * @param input the input matrix to the layer.
+     * @return the output matrix produced by the layer.
+     */
+    Matrix forwardMut(Matrix input);
 
     /**
      * Calculates the gradient of the loss function with respect to the input of this layer,
      * given the gradient with respect to the output of this layer.
+     *
+     * May mutate the outputGradient matrix.
      *
      * @param input          the input matrix to the layer.
      * @param output         the output matrix from the layer.

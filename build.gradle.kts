@@ -19,3 +19,8 @@ dependencies {
 //        useJUnitPlatform();
 //    }
 //}
+
+task("runTraining", JavaExec::class) {
+    mainClass.set("hb.Train")
+    classpath = sourceSets["main"].runtimeClasspath
+}

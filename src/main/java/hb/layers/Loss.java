@@ -1,4 +1,4 @@
-package hb.nn;
+package hb.layers;
 
 import hb.tensor.Matrix;
 

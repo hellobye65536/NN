@@ -1,4 +1,4 @@
-package hb.nn;
+package hb.layers;
 
 import hb.tensor.Matrix;
 
@@ -16,6 +16,11 @@ public class Dense implements Layer {
 
     @Override
     public Matrix forward(Matrix input) {
+        return forwardMut(input);
+    }
+
+    @Override
+    public Matrix forwardMut(Matrix input) {
         return weights.matmulNN(input);
     }
 

@@ -59,6 +59,18 @@ public final class Matrix {
         buffer[row * cols + col] = v;
     }
 
+    public Matrix transpose() {
+        Matrix transposed = Matrix.zeros(cols, rows);
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                transposed.set(j, i, get(i, j));
+            }
+        }
+
+        return transposed;
+    }
+
     public Matrix matmulNN(Matrix rhs) {
         if (this.cols != rhs.rows)
             throw new IllegalArgumentException();
