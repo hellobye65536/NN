@@ -21,7 +21,7 @@ public class Network {
     public static Matrix[] calculateGradients(Layer[] network, Loss loss, Matrix input, Matrix actual) {
         Matrix[] gradients = new Matrix[network.length];
 
-        Deque<Matrix> stored = new ArrayDeque<>();
+        Deque<Matrix> stored = new ArrayDeque<>(network.length + 1);
         stored.push(input);
 
         for (Layer layer : network) {

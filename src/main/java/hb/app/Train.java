@@ -1,4 +1,4 @@
-package hb;
+package hb.app;
 
 import hb.layers.*;
 import hb.tensor.Matrix;
@@ -8,11 +8,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.zip.GZIPInputStream;
 
-public class Train {
-    public static final int IMAGE_SIZE = 28 * 28;
+import static hb.app.Model.IMAGE_SIZE;
 
+public class Train {
     public static void main(String[] args) throws IOException {
         DataPair training = loadData(buildStream("./misc/train.csv.gz"));
         DataPair testing = loadData(buildStream("./misc/test.csv.gz"));
@@ -59,6 +60,17 @@ public class Train {
 
     private static BufferedReader buildStream(String path) throws IOException {
         return new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(path))));
+    }
+
+    private static void shuffle(int[] arr) {
+        Random random = new Random();
+        for (int i = arr.length - 1; i > 0; i--) {
+            final int j = random.nextInt(i + 1);
+
+            final int tmp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = tmp;
+        }
     }
 
     record DataPair(int[] labels, float[] data) {}
