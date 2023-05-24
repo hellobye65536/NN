@@ -5,6 +5,8 @@ import hb.layers.*;
 public class Model {
     public static final int IMAGE_SIZE = 28 * 28;
 
+    public static final Loss loss = new CrossEntropy();
+
     public static Layer[] buildNetwork() {
         return new Layer[] {
             new Dense(IMAGE_SIZE, 32),

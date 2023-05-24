@@ -2,6 +2,8 @@ package hb.layers;
 
 import hb.tensor.Matrix;
 
+import java.util.Random;
+
 public class ReLU implements Layer {
     @Override
     public Matrix weights() {
@@ -35,4 +37,7 @@ public class ReLU implements Layer {
     public Matrix weightGradient(Matrix input, Matrix output, Matrix outputGradient) {
         return null;
     }
+
+    @Override
+    public void initializeWeights(Random random) {}
 }

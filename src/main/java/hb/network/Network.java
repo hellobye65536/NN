@@ -6,9 +6,13 @@ import hb.tensor.Matrix;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Random;
 
 public class Network {
-    private Network() {}
+    private static Random random = new Random();
+
+    private Network() {
+    }
 
     public static Matrix runNetwork(Layer[] network, Matrix input) {
         for (Layer layer : network) {
@@ -29,8 +33,22 @@ public class Network {
             stored.push(input);
         }
 
-        System.out.println(stored);
+        Matrix inputGradient = loss.gradient(stored.peek(), actual);
+
+        for (int i = network.length - 1; i >= 0; i--) {
+            Matrix layerOutput = stored.pop();
+            Matrix layerInput = stored.peek();
+            gradients[i] = network[i].weightGradient(layerInput, layerOutput, inputGradient);
+            // input gradient not needed for first layer
+            if (i != 0)
+                inputGradient = network[i].inputGradient(layerInput, layerOutput, inputGradient);
+        }
 
         return gradients;
+    }
+
+    public static void randomizeWeights(Layer[] network) {
+        for (Layer layer : network)
+            layer.initializeWeights(random);
     }
 }

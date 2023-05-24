@@ -2,6 +2,8 @@ package hb.layers;
 
 import hb.tensor.Matrix;
 
+import java.util.Random;
+
 /**
  * Represents a single layer in a neural network.
  * <p>
@@ -59,4 +61,10 @@ public interface Layer {
      * @return the weight gradient of the layer.
      */
     Matrix weightGradient(Matrix input, Matrix output, Matrix outputGradient);
+
+    /**
+     * Initializes this layer's weights. May use random numbers. The initialization method depends on
+     * the layer type.
+     */
+    void initializeWeights(Random random);
 }

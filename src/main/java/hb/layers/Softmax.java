@@ -2,6 +2,8 @@ package hb.layers;
 
 import hb.tensor.Matrix;
 
+import java.util.Random;
+
 public class Softmax implements Layer {
     public final float beta;
 
@@ -69,4 +71,7 @@ public class Softmax implements Layer {
     public Matrix weightGradient(Matrix input, Matrix output, Matrix outputGradient) {
         return null;
     }
+
+    @Override
+    public void initializeWeights(Random random) {}
 }

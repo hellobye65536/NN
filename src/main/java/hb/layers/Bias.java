@@ -2,6 +2,8 @@ package hb.layers;
 
 import hb.tensor.Matrix;
 
+import java.util.Random;
+
 public class Bias implements Layer {
     private final Matrix weights;
 
@@ -45,5 +47,14 @@ public class Bias implements Layer {
         }
 
         return grad;
+    }
+
+    @Override
+    public void initializeWeights(Random random) {
+        for (int row = 0; row < weights.rows(); row++) {
+            for (int col = 0; col < weights.cols(); col++) {
+                weights.set(row, col, 0);
+            }
+        }
     }
 }

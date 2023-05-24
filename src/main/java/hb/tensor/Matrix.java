@@ -71,6 +71,25 @@ public final class Matrix {
         return transposed;
     }
 
+    public Matrix mulScalar(float v) {
+        for (int i = 0; i < buffer.length; i++) {
+            buffer[i] *= v;
+        }
+
+        return this;
+    }
+
+    public Matrix add(Matrix rhs) {
+        if (this.rows != rhs.rows || this.cols != rhs.cols)
+            throw new IllegalArgumentException();
+
+        for (int i = 0; i < buffer.length; i++) {
+            this.buffer[i] += rhs.buffer[i];
+        }
+
+        return this;
+    }
+
     public Matrix matmulNN(Matrix rhs) {
         if (this.cols != rhs.rows)
             throw new IllegalArgumentException();
@@ -123,6 +142,13 @@ public final class Matrix {
         }
 
         return result;
+    }
+
+    public void throwIfNaN() throws ArithmeticException {
+        for (int i = 0; i < buffer.length; i++) {
+            if (Float.isNaN(buffer[i]))
+                throw new ArithmeticException();
+        }
     }
 
     @Override
