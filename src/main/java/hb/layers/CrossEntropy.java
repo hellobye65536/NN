@@ -1,6 +1,6 @@
 package hb.layers;
 
-import hb.tensor.Matrix;
+import hb.matrix.Matrix;
 
 public class CrossEntropy implements Loss {
     @Override
@@ -9,7 +9,10 @@ public class CrossEntropy implements Loss {
 
         for (int row = 0; row < predicted.rows(); row++) {
             for (int col = 0; col < predicted.cols(); col++) {
-                total += actual.get(row, col) * Math.log(predicted.get(row, col));
+                // have small number be minimum to avoid taking the log of zero
+                final float v_p = (float) Math.max(predicted.get(row, col), 0.0001);
+                final float v_a = actual.get(row, col);
+                total += v_a * Math.log(v_p);
             }
         }
 
@@ -24,9 +27,11 @@ public class CrossEntropy implements Loss {
 
         for (int row = 0; row < predicted.rows(); row++) {
             for (int col = 0; col < predicted.cols(); col++) {
-                final float v_p = predicted.get(row, col);
+                // have small number be minimum to avoid dividing by zero
+                final float v_p = (float) Math.max(predicted.get(row, col), 0.0001);
                 final float v_a = actual.get(row, col);
-                ret.set(row, col, v_a / v_p);
+
+                ret.set(row, col, -v_a / v_p / predicted.cols());
             }
         }
 

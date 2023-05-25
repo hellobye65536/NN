@@ -1,8 +1,9 @@
 package hb.layers;
 
-import hb.tensor.Matrix;
+import hb.matrix.Matrix;
 
 import java.util.Random;
+import java.util.random.RandomGenerator;
 
 /**
  * Represents a single layer in a neural network.
@@ -30,7 +31,7 @@ public interface Layer {
     /**
      * Performs forward propagation on the input matrix and returns the output matrix.
      * (Evaluates this layer with some input)
-     *
+     * <p>
      * May mutate the input matrix.
      *
      * @param input the input matrix to the layer.
@@ -41,7 +42,7 @@ public interface Layer {
     /**
      * Calculates the gradient of the loss function with respect to the input of this layer,
      * given the gradient with respect to the output of this layer.
-     *
+     * <p>
      * May mutate the outputGradient matrix.
      *
      * @param input          the input matrix to the layer.
@@ -66,5 +67,5 @@ public interface Layer {
      * Initializes this layer's weights. May use random numbers. The initialization method depends on
      * the layer type.
      */
-    void initializeWeights(Random random);
+    void initializeWeights(RandomGenerator random);
 }

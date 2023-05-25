@@ -1,14 +1,13 @@
 package hb.app;
 
-import hb.layers.*;
+import hb.layers.Layer;
+import hb.layers.Loss;
+import hb.matrix.Matrix;
 import hb.network.Network;
-import hb.tensor.Matrix;
 import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarBuilder;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -19,19 +18,23 @@ import static hb.app.Model.IMAGE_SIZE;
 public class Train {
 
     public static final int EPOCHS = 50;
-    public static final int BATCH_SIZE = 1;
+    public static final int BATCH_SIZE = 64;
 
-    public static void main(String[] args) throws IOException {
-        DataPair training = loadData(buildStream("./dataset/train.csv.gz"));
-        DataPair testing = loadData(buildStream("./dataset/test.csv.gz"));
-
-        final int trainingBatches = (training.size() + BATCH_SIZE - 1) / BATCH_SIZE;
-        final int testingBatches = (testing.size() + BATCH_SIZE - 1) / BATCH_SIZE;
+    public static void main(String[] args) {
+        DataPair training, testing;
+        try {
+            training = loadData(buildStream("./dataset/train.csv.gz"));
+            testing = loadData(buildStream("./dataset/test.csv.gz"));
+        } catch (IOException e) {
+            System.err.println("Error loading training/testing data");
+            e.printStackTrace();
+            return;
+        }
 
         Layer[] network = Model.buildNetwork();
         Loss loss = Model.loss;
 
-        Network.randomizeWeights(network);
+        Network.randomizeWeights(network, new Random());
 
         for (int epoch = 0; epoch < EPOCHS; epoch++) {
             System.out.printf("Epoch %d/%d:\n", epoch + 1, EPOCHS);
@@ -40,30 +43,31 @@ public class Train {
             shuffle(trainingIndices);
 
             // training for current epoch
-            try (ProgressBar bar = new ProgressBar("Training", trainingBatches)) {
+            try (ProgressBar bar = new ProgressBarBuilder()
+                .setTaskName("Training")
+                .setInitialMax(training.size())
+                .setUpdateIntervalMillis(500)
+                .build()) {
                 float running_loss = 0;
                 for (int batch_begin = 0; batch_begin < training.size(); batch_begin += BATCH_SIZE) {
                     final int batch_end = Math.min(batch_begin + BATCH_SIZE, training.size());
+                    final int cur_batch_size = batch_end - batch_begin;
 
                     final ProcessedPair trainingBatch = processData(training, trainingIndices, batch_begin, batch_end);
-                    Matrix[] gradients = Network.calculateGradients(network, loss, trainingBatch.input,
-                        trainingBatch.actual);
+                    final Network.GradientPair gradient_pair = Network.calculateGradients(network, loss,
+                        trainingBatch.input, trainingBatch.actual);
 
-                    final ProcessedPair testingBatch = processData(training, trainingIndices, batch_begin, batch_end);
-                    Matrix predicted = Network.runNetwork(network, testingBatch.input);
-                    running_loss += loss.loss(predicted, testingBatch.actual);
+                    running_loss += gradient_pair.loss();
+                    final Matrix[] gradients = gradient_pair.gradients();
 
                     for (int i = 0; i < network.length; i++) {
                         if (network[i].weights() != null) {
-                            gradients[i].mulScalar(-0.0000001f / (batch_end - batch_begin));
-//                            System.out.println(gradients[i]);
+                            gradients[i].mulScalar(-0.001f);
                             network[i].weights().add(gradients[i]);
                         }
                     }
 
-//                    System.exit(0);
-
-                    bar.step();
+                    bar.stepBy(cur_batch_size);
                     bar.setExtraMessage(String.format("Loss: %f", running_loss / batch_end));
                 }
             }
@@ -71,25 +75,47 @@ public class Train {
             int[] testingIndices = IntStream.range(0, testing.size()).toArray();
 
             // testing for current epoch
-            try (ProgressBar bar = new ProgressBar("Testing", testingBatches)) {
+            try (ProgressBar bar = new ProgressBarBuilder()
+                .setTaskName("Testing")
+                .setInitialMax(testing.size())
+                .setUpdateIntervalMillis(500)
+                .build()) {
                 float running_loss = 0;
                 for (int batch_begin = 0; batch_begin < testing.size(); batch_begin += BATCH_SIZE) {
                     final int batch_end = Math.min(batch_begin + BATCH_SIZE, testing.size());
+                    final int cur_batch_size = batch_end - batch_begin;
 
                     final ProcessedPair testingBatch = processData(testing, testingIndices, batch_begin, batch_end);
                     Matrix predicted = Network.runNetwork(network, testingBatch.input);
                     running_loss += loss.loss(predicted, testingBatch.actual);
 
-                    bar.step();
+                    bar.stepBy(cur_batch_size);
                     bar.setExtraMessage(String.format("Loss: %f", running_loss / batch_end));
                 }
             }
         }
+
+        try (DataOutputStream weightOut = new DataOutputStream(
+            new BufferedOutputStream(new FileOutputStream("trained_weights")))) {
+            for (Layer layer : network) {
+                if (layer.weights() == null)
+                    continue;
+
+                final Matrix weights = layer.weights();
+                for (int row = 0; row < weights.rows(); row++) {
+                    for (int col = 0; col < weights.cols(); col++) {
+                        weightOut.writeFloat(weights.get(row, col));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing trained weights");
+            e.printStackTrace();
+        }
     }
 
     private static ProcessedPair processData(DataPair data, int[] indices, int begin, int end) {
-        if (begin >= end)
-            throw new IllegalArgumentException();
+        if (begin >= end) throw new IllegalArgumentException();
 
         Matrix input = Matrix.zeros(IMAGE_SIZE, end - begin);
         Matrix actual = Matrix.zeros(10, end - begin);

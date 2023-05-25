@@ -1,8 +1,9 @@
 package hb.layers;
 
-import hb.tensor.Matrix;
+import hb.matrix.Matrix;
 
 import java.util.Random;
+import java.util.random.RandomGenerator;
 
 public class Dense implements Layer {
     private final Matrix weights;
@@ -37,7 +38,7 @@ public class Dense implements Layer {
     }
 
     @Override
-    public void initializeWeights(Random random) {
+    public void initializeWeights(RandomGenerator random) {
         final double deviation = Math.sqrt(2.0 / weights.rows());
 
         for (int row = 0; row < weights.rows(); row++) {

@@ -1,6 +1,6 @@
 package hb.layers;
 
-import hb.tensor.Matrix;
+import hb.matrix.Matrix;
 
 public interface Loss {
     float loss(Matrix predicted, Matrix actual);

@@ -16,4 +16,3 @@ with gzip.open('test.csv.gz', 'wt') as f:
     for v in mnist['test']:
         print(v['label'], end=',', file=f)
         print(*np.array(v['image']).flatten(), sep=',', file=f)
-

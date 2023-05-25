@@ -1,4 +1,4 @@
-package hb.tensor;
+package hb.matrix;
 
 import java.util.Arrays;
 
@@ -13,24 +13,6 @@ public final class Matrix {
         this.buffer = buffer;
         this.rows = rows;
         this.cols = cols;
-    }
-
-    public Matrix(float[][] data) {
-        rows = data.length;
-
-        if (rows == 0) {
-            cols = 0;
-            buffer = new float[0];
-            return;
-        }
-
-        cols = data[0].length;
-        for (int i = 1; i < data.length; i++) {
-            if (data[i].length != cols)
-                throw new IllegalArgumentException();
-        }
-
-        buffer = new float[rows * cols];
     }
 
     public static Matrix zeros(int rows, int cols) {
@@ -57,18 +39,6 @@ public final class Matrix {
             throw new IndexOutOfBoundsException();
 
         buffer[row * cols + col] = v;
-    }
-
-    public Matrix transpose() {
-        Matrix transposed = Matrix.zeros(cols, rows);
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                transposed.set(j, i, get(i, j));
-            }
-        }
-
-        return transposed;
     }
 
     public Matrix mulScalar(float v) {
@@ -142,13 +112,6 @@ public final class Matrix {
         }
 
         return result;
-    }
-
-    public void throwIfNaN() throws ArithmeticException {
-        for (int i = 0; i < buffer.length; i++) {
-            if (Float.isNaN(buffer[i]))
-                throw new ArithmeticException();
-        }
     }
 
     @Override
