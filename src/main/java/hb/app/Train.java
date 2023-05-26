@@ -18,7 +18,8 @@ import static hb.app.Model.IMAGE_SIZE;
 public class Train {
 
     public static final int EPOCHS = 50;
-    public static final int BATCH_SIZE = 64;
+    public static final int BATCH_SIZE = 256;
+    public static final float TRAINING_RATE = 0.001f;
 
     public static void main(String[] args) {
         DataPair training, testing;
@@ -62,7 +63,7 @@ public class Train {
 
                     for (int i = 0; i < network.length; i++) {
                         if (network[i].weights() != null) {
-                            gradients[i].mulScalar(-0.001f);
+                            gradients[i].mulScalar(-TRAINING_RATE);
                             network[i].weights().add(gradients[i]);
                         }
                     }

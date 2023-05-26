@@ -37,6 +37,7 @@ public class Dense implements Layer {
         return outputGradient.matmulNT(input);
     }
 
+    // using "He" initialization
     @Override
     public void initializeWeights(RandomGenerator random) {
         final double deviation = Math.sqrt(2.0 / weights.rows());
