@@ -1,19 +1,23 @@
 package hb.app;
 
 import hb.matrix.Matrix;
+import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
-import java.util.Random;
-
 public class DrawUIController {
-    public Canvas draw;
+    @FXML
+    private Canvas draw;
 
     private Matrix drawPixels = Matrix.zeros(28, 28);
+    // used when dragging
+    private double prevMouseX, prevMouseY;
 
-    public void initialize() {
+    @FXML
+    private void initialize() {
         for (int row = 0; row < drawPixels.rows(); row++) {
             for (int col = 0; col < drawPixels.cols(); col++) {
                 drawPixels.set(row, col, 1.0f);
@@ -24,10 +28,43 @@ public class DrawUIController {
         draw.heightProperty().addListener(_observable -> redrawCanvas());
     }
 
-    public void drawDrag(MouseEvent mouseEvent) {
-        System.out.println(mouseEvent);
+//    private Point2D transformMouse(Point2D pos) {
+//        return transformMouse(pos.getX(), pos.getY());
+//    }
 
-        redrawCanvas();
+    private Point2D transformMouse(double x, double y) {
+        final double square_width = Math.min(draw.getWidth(), draw.getHeight());
+
+        final double x_shift = (draw.getWidth() - square_width) / 2;
+        final double y_shift = (draw.getHeight() - square_width) / 2;
+
+        return new Point2D((x - x_shift) * 28 / square_width, (y - y_shift) * 28 / square_width);
+    }
+
+    @FXML
+    private void drawMousePressed(MouseEvent mouseEvent) {
+        final Point2D curMouse = transformMouse(mouseEvent.getX(), mouseEvent.getY());
+        final double curMouseX = curMouse.getX();
+        final double curMouseY = curMouse.getY();
+
+        prevMouseX = curMouseX;
+        prevMouseY = curMouseY;
+
+        
+    }
+
+    @FXML
+    private void drawMouseDragged(MouseEvent mouseEvent) {
+        final Point2D curMouse = transformMouse(mouseEvent.getX(), mouseEvent.getY());
+        final double curMouseX = curMouse.getX();
+        final double curMouseY = curMouse.getY();
+
+        System.out.printf("(%f, %f) -> (%f, %f)\n", prevMouseX, prevMouseY, curMouseX, curMouseY);
+
+        prevMouseX = curMouseX;
+        prevMouseY = curMouseY;
+
+//        redrawCanvas();
     }
 
     private void redrawCanvas() {

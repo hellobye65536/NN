@@ -9,7 +9,8 @@
             fx:controller="hb.app.DrawUIController">
     <center>
         <Pane fx:id="drawPane">
-            <Canvas fx:id="draw" height="${drawPane.height}" width="${drawPane.width}" onMouseDragged="#drawDrag"/>
+            <Canvas fx:id="draw" height="${drawPane.height}" width="${drawPane.width}"
+                    onMousePressed="#drawMousePressed" onMouseDragged="#drawMouseDragged"/>
             <cursor>
                 <Cursor fx:constant="CROSSHAIR"/>
             </cursor>

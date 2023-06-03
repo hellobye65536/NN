@@ -114,6 +114,10 @@ public final class Matrix {
         return result;
     }
 
+    public Matrix reshape(int newRows, int newCols) {
+        return new Matrix(buffer, newRows, newCols);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
