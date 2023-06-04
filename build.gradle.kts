@@ -21,7 +21,12 @@ dependencies {
 }
 
 task("runTraining", JavaExec::class) {
-    mainClass.set("hb.app.Train")
+    mainClass.set("hb.app.Training")
+    classpath = sourceSets["main"].runtimeClasspath
+}
+
+task("runTesting", JavaExec::class) {
+    mainClass.set("hb.app.Testing")
     classpath = sourceSets["main"].runtimeClasspath
 }
 

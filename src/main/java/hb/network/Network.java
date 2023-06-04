@@ -6,15 +6,20 @@ import hb.matrix.Matrix;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Random;
 import java.util.random.RandomGenerator;
 
 public class Network {
     private Network() {}
 
     public static Matrix runNetwork(Layer[] network, Matrix input) {
+        boolean first = true;
+
         for (Layer layer : network) {
-            input = layer.forwardMut(input);
+            if (first)
+                input = layer.forward(input);
+            else
+                input = layer.forwardMut(input);
+            first = false;
         }
 
         return input;

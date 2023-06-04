@@ -2,10 +2,23 @@ package hb.matrix;
 
 import java.util.Arrays;
 
+/**
+ * Represents some matrix of floating point numbers.
+ */
 public final class Matrix {
+    // The actual buffer storing the contents of this matrix
     private final float[] buffer;
+    // The row and column counts of this matrix
     private final int rows, cols;
 
+    /**
+     * Construct a matrix using a provided buffer with some shape.
+     *
+     * @param buffer The provided buffer
+     * @param rows Rows
+     * @param cols Columns
+     * @throws IllegalArgumentException if the length of <code>buffer</code> doesn't equal to <code>rows * cols</code>
+     */
     public Matrix(float[] buffer, int rows, int cols) {
         if (buffer.length != rows * cols)
             throw new IllegalArgumentException();
@@ -15,14 +28,27 @@ public final class Matrix {
         this.cols = cols;
     }
 
+    /**
+     * Construct a matrix filled with zeroes with some shape.
+     *
+     * @param rows Rows
+     * @param cols Columns
+     * @return The matrix
+     */
     public static Matrix zeros(int rows, int cols) {
         return new Matrix(new float[rows * cols], rows, cols);
     }
 
+    /**
+     * @return The amount of rows in this matrix
+     */
     public int rows() {
         return rows;
     }
 
+    /**
+     * @return The amount of columns in this matrix
+     */
     public int cols() {
         return cols;
     }
