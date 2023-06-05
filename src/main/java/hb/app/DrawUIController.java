@@ -27,7 +27,7 @@ public class DrawUIController {
     // The size of the brush when drawing
     private static final double DRAW_BRUSH_SIZE = 2;
     // The size of the digit bar at its maximum width.
-    private static final double DIGIT_BAR_MAX_WIDTH = 60;
+    private static final double DIGIT_BAR_MAX_WIDTH = 100;
     // The pixels drawn by the user
     private final Matrix drawPixels = Matrix.zeros(IMAGE_WIDTH, IMAGE_WIDTH);
 
@@ -90,11 +90,6 @@ public class DrawUIController {
         calculatePrediction();
     }
 
-    @FXML
-    private void testButton() {
-        drawLine(0, 0, 28, 28);
-    }
-
     /**
      * Transforms a mouse coordinate in the draw canvas to pixel space (such that top left is <code>(0, 0)</code> and
      * bottom right is <code>(28, 28)</code>
@@ -121,7 +116,6 @@ public class DrawUIController {
         final double curMouseX = curMouse.getX();
         final double curMouseY = curMouse.getY();
 
-//        System.out.printf("(%f, %f)\n", curMouseX, curMouseY);
         drawPoint(curMouseX, curMouseY);
 
         prevMouseX = curMouseX;
@@ -137,7 +131,6 @@ public class DrawUIController {
         final double curMouseX = curMouse.getX();
         final double curMouseY = curMouse.getY();
 
-//        System.out.printf("(%f, %f) -> (%f, %f)\n", prevMouseX, prevMouseY, curMouseX, curMouseY);
         drawLine(prevMouseX, prevMouseY, curMouseX, curMouseY);
 
         prevMouseX = curMouseX;
@@ -250,8 +243,6 @@ public class DrawUIController {
      * Fill a pixel <code>(x, y)</code> with black using some alpha
      */
     private void drawPixel(int x, int y, double alpha) {
-        System.out.printf("drawPixel: (%d, %d): %f\n", x, y, alpha);
-
         final double prevPixel = drawPixels.get(y, x);
         drawPixels.set(y, x, (float) (prevPixel * alpha + (1 - alpha)));
     }
