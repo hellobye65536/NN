@@ -5,6 +5,9 @@ import hb.matrix.Matrix;
 import java.util.Random;
 import java.util.random.RandomGenerator;
 
+/**
+ * Represents a dense layer, or a matrix multiplication by weights.
+ */
 public class Dense implements Layer {
     private final Matrix weights;
 

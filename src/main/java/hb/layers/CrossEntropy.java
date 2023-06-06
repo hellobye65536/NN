@@ -2,6 +2,11 @@ package hb.layers;
 
 import hb.matrix.Matrix;
 
+/**
+ * Represents a Cross Entropy loss.
+ * <p>
+ * See <a href="https://en.wikipedia.org/wiki/Cross_entropy">Wikipedia</a>
+ */
 public class CrossEntropy implements Loss {
     @Override
     public float loss(Matrix predicted, Matrix actual) {

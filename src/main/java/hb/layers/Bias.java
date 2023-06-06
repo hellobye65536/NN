@@ -5,6 +5,9 @@ import hb.matrix.Matrix;
 import java.util.Random;
 import java.util.random.RandomGenerator;
 
+/**
+ * Represents a bias layer. Adds some bias to each neuron.
+ */
 public class Bias implements Layer {
     private final Matrix weights;
 

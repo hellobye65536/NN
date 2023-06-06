@@ -5,6 +5,11 @@ import hb.matrix.Matrix;
 import java.util.Random;
 import java.util.random.RandomGenerator;
 
+/**
+ * Represents a ReLU activation function.
+ * <p>
+ * See <a href="https://en.wikipedia.org/wiki/Rectifier_(neural_networks)">Wikipedia</a>
+ */
 public class ReLU implements Layer {
     @Override
     public Matrix weights() {

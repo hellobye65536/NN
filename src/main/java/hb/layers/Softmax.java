@@ -5,6 +5,11 @@ import hb.matrix.Matrix;
 import java.util.Random;
 import java.util.random.RandomGenerator;
 
+/**
+ * Represents a softmax activation function.
+ * <p>
+ * See <a href="https://en.wikipedia.org/wiki/Softmax_function">Wikipedia</a>
+ */
 public class Softmax implements Layer {
     public final float beta;
 

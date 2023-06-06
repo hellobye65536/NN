@@ -78,6 +78,9 @@ public class DrawUIController {
         }
     }
 
+    /**
+     * Reset the canvas to the initial state (all white)
+     */
     @FXML
     private void resetCanvas() {
         for (int row = 0; row < drawPixels.rows(); row++) {
