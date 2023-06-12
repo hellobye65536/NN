@@ -17,7 +17,7 @@ import java.util.zip.GZIPInputStream;
 import static hb.app.Model.saveWeights;
 
 public class Training {
-
+    // epoch: a full pass through the training data
     public static final int EPOCHS = 100;
     public static final int BATCH_SIZE = 256;
     public static final float TRAINING_RATE = 0.05f;
