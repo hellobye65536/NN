@@ -23,6 +23,7 @@ public class Training {
     public static final float TRAINING_RATE = 0.05f;
 
     public static void main(String[] args) {
+        // load datasets
         DataPair training, testing;
         try {
             training = DataPair.loadData(buildStream("./dataset/train.csv.gz"));
@@ -33,14 +34,17 @@ public class Training {
             return;
         }
 
+        // build model
         Layer[] network = Model.buildNetwork();
         Loss loss = Model.loss;
 
         Network.randomizeWeights(network, new Random());
 
+        // train for EPOCHS
         for (int epoch = 0; epoch < EPOCHS; epoch++) {
             System.out.printf("Epoch %d/%d:\n", epoch + 1, EPOCHS);
 
+            // prepare training indices, shuffled
             int[] trainingIndices = IntStream.range(0, training.size()).toArray();
             shuffle(trainingIndices);
 
@@ -50,18 +54,21 @@ public class Training {
                 .setInitialMax(training.size())
                 .setUpdateIntervalMillis(500)
                 .build()) {
+                // sum of losses for each batch so far
                 float running_loss = 0;
                 for (int batch = 0; batch * BATCH_SIZE < training.size(); batch++) {
                     final int batch_begin = batch * BATCH_SIZE;
                     final int batch_end = Math.min(batch_begin + BATCH_SIZE, training.size());
 
                     final ProcessedPair trainingBatch = training.processData(trainingIndices, batch_begin, batch_end);
+
                     final Network.GradientPair gradient_pair = Network.calculateGradients(network, loss,
                         trainingBatch.input(), trainingBatch.actual());
 
                     running_loss += gradient_pair.loss();
                     final Matrix[] gradients = gradient_pair.gradients();
 
+                    // do gradient descent on the weights
                     for (int i = 0; i < network.length; i++) {
                         if (network[i].weights() != null) {
                             gradients[i].mulScalar(-TRAINING_RATE);
@@ -82,6 +89,7 @@ public class Training {
                 .setInitialMax(testing.size())
                 .setUpdateIntervalMillis(500)
                 .build()) {
+                // sum of losses for each batch so far
                 float running_loss = 0;
                 for (int batch = 0; batch * BATCH_SIZE < testing.size(); batch++) {
                     final int batch_begin = batch * BATCH_SIZE;
@@ -97,6 +105,7 @@ public class Training {
             }
         }
 
+        // write the trained weights to a file
         try (OutputStream weightOut = new BufferedOutputStream(new FileOutputStream("trained_weights"))) {
             saveWeights(network, weightOut);
         } catch (IOException e) {
@@ -105,6 +114,9 @@ public class Training {
         }
     }
 
+    /**
+     * Build the reader for a dataset given a file
+     */
     private static BufferedReader buildStream(String path) throws IOException {
         return new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(path))));
     }

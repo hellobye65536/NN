@@ -7,7 +7,13 @@ import java.io.*;
 import java.util.Arrays;
 
 public class Model {
+    /**
+     * The width of the image
+     */
     public static final int IMAGE_WIDTH = 28;
+    /**
+     * The pixel count of the image
+     */
     public static final int IMAGE_SIZE = IMAGE_WIDTH * IMAGE_WIDTH;
 
     /**
@@ -80,7 +86,19 @@ public class Model {
     }
 
 
+    /**
+     * Represents a raw pair of data: correct labels, and image data
+     *
+     * @param labels The correct labels
+     * @param data The image data flattened
+     */
     public record DataPair(int[] labels, float[] data) {
+        /**
+         * Load a <code>DataPair</code> from the reader
+         * @param reader The BufferedReader
+         * @return a parsed DataPair
+         * @throws IOException if there was an exception
+         */
         public static DataPair loadData(BufferedReader reader) throws IOException {
             int length = Integer.parseInt(reader.readLine());
 
@@ -101,6 +119,14 @@ public class Model {
             return new DataPair(labels, data);
         }
 
+        /**
+         * Process a subset of this data into matrices, in the form of a <code>{@link ProcessedPair}</code>
+         *
+         * @param indices An array of indices of the data
+         * @param begin The beginning (inclusive) of the range of indices to process
+         * @param end The end (exclusive) of the range of indices to process
+         * @return A <code>{@link ProcessedPair}</code>
+         */
         public ProcessedPair processData(int[] indices, int begin, int end) {
             if (begin >= end) throw new IllegalArgumentException();
 
@@ -123,5 +149,11 @@ public class Model {
         }
     }
 
+    /**
+     * Some subset of data processed into matrices, to be used by a neural network
+     *
+     * @param input The image data as matrices
+     * @param actual The labels as matrices
+     */
     public record ProcessedPair(Matrix input, Matrix actual) {}
 }

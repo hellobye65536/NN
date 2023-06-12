@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+// JavaFX stub
 public class DrawUI extends Application {
     @Override
     public void start(Stage stage) throws Exception {

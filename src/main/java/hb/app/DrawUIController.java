@@ -257,10 +257,12 @@ public class DrawUIController {
         final double squareWidth = Math.min(draw.getWidth(), draw.getHeight());
 
         final var gc = draw.getGraphicsContext2D();
+        // reset the transform
         gc.setTransform(new Affine());
 
         gc.clearRect(0, 0, draw.getWidth(), draw.getHeight());
 
+        // transform so that 0,0 to 28,28 is the draw grid
         gc.translate(
             (draw.getWidth() - squareWidth) / 2,
             (draw.getHeight() - squareWidth) / 2
@@ -268,6 +270,7 @@ public class DrawUIController {
 
         gc.scale(squareWidth / IMAGE_WIDTH, squareWidth / IMAGE_WIDTH);
 
+        // draw the pixels
         for (int x = 0; x < IMAGE_WIDTH; x++) {
             for (int y = 0; y < IMAGE_WIDTH; y++) {
                 gc.setFill(Color.gray(1 - drawPixels.get(y, x)));
@@ -280,10 +283,14 @@ public class DrawUIController {
      * Predict the current digit using the network, and redraw the chart
      */
     private void calculatePrediction() {
+        // get the predictions
         Matrix prediction = Network.runNetwork(network, drawPixels.reshape(IMAGE_SIZE, 1));
 
+        // the most likely prediction, and its probability, to be highlighted
         int mostLikely = 0;
         float mostLikelyProbability = 0;
+
+        // resize the bars according to their probability
         for (int i = 0; i < 10; i++) {
             Rectangle digitBar = digitBars[i];
             float probability = prediction.get(i, 0);
