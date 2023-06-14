@@ -24,3 +24,5 @@ To test out the network graphically by drawing digits using a mouse, run:
 ./gradlew runDrawUI
 ```
 This requires a weights file called `trained_weights`.
+
+The AI is sensitive to the position and size of the drawn digit. Try to approximately center the digit, and shift the digit around to achieve better results.
